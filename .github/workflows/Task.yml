@@ -8,7 +8,7 @@ on:
     branches: 
       - master
   schedule:
-    - cron: '12 */3 * * *'
+    - cron: '40 */3 * * *'
   watch:
     types: [started]
    
@@ -21,7 +21,8 @@ jobs:
       uses: actions/checkout@master
     - name: Set up Python #安装python
       uses: actions/setup-python@v1
-  
+      with:
+        python-version: 3.8
     - name: Install requests #安装requests
       run: |
         pip install requests
@@ -30,18 +31,18 @@ jobs:
         CONFIG_ID: ${{ secrets.CONFIG_ID }} # secrets_id 提供
         CONFIG_KEY: ${{ secrets.CONFIG_KEY }} # secrets_key 提供
       run: | 
-    
+        cp 1.py 2.py
         echo $CONFIG_ID > configid.txt
         echo $CONFIG_KEY > configkey.txt
-        sed -i '10 r configid.txt' 1.py
-        sed -i '12 r configkey.txt' 1.py
+        sed -i '10 r configid.txt' 2.py
+        sed -i '12 r configkey.txt' 2.py
     - name: Test Api #Api调用
       run: | 
         echo `date +"%Y-%m-%d %H:%M:%S"` begin > time.log
-        python 1.py
+        python 2.py
     - name: Delete secrets config #删除机密
       run: | 
-        rm -f 1.py
+        rm -f 2.py
         rm -f configid.txt
         rm -f configkey.txt    
     - name: Commit #上传新的refresh_token到仓库
